@@ -17,8 +17,15 @@ class Program
         var page = await context.NewPageAsync();
         await page.GotoAsync("https://wp2.pvforecast.cz/predpoved-osvitu/");
 
-        
-        await page.Mouse.ClickAsync(1120f, 450f);
+        var data = new { lat = 49.982992480271285, lng = 18.008260947659032}; // Oldrisov
+        // Pass data as a parameter
+        var result = await page.EvaluateAsync("data => {" +
+            "window.mark.setLatLng(data);" +
+            "window.mark.bindPopup(data);" +
+            "window.graf_data(window.data_storage, data);" +
+            "}", data);
+
+        //await page.Mouse.ClickAsync(1120f, 450f);
         await page.ScreenshotAsync(new() { Path = "predpoved.png" });
     }
 }
